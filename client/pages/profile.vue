@@ -10,17 +10,31 @@
             <!-- Name -->
             <div class="a-spacing-top-medium">
               <label>Name</label>
-              <input class="a-input-text" style="width: 100%" v-model="name" :placeholder="$auth.$state.user.name"/>
+              <input
+                class="a-input-text"
+                style="width: 100%"
+                v-model="name"
+                :placeholder="$auth.$state.user.name"
+              />
             </div>
             <!-- Email -->
             <div class="a-spacing-top-medium">
               <label>Email</label>
-              <input class="a-input-text" style="width: 100%" v-model="email" :placeholder="$auth.$state.user.email" />
+              <input
+                class="a-input-text"
+                style="width: 100%"
+                v-model="email"
+                :placeholder="$auth.$state.user.email"
+              />
             </div>
             <!-- Password -->
             <div class="a-spacing-top-medium">
               <label>Password</label>
-              <input class="a-input-text" style="width: 100%" v-model="password" />
+              <input
+                class="a-input-text"
+                style="width: 100%"
+                v-model="password"
+              />
             </div>
 
             <!-- Button -->
@@ -49,7 +63,31 @@ export default {
     return {
       name: '',
       email: '',
+      password: '',
     }
+  },
+
+  methods: {
+    async onUpdateProfile() {
+      try {
+        let data = {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        }
+        let response = await this.$axios.$put('/api/auth/user', data)
+
+        if (response.success) {
+          this.name = ''
+          this.email = ''
+          this.password = ''
+
+          await this.$auth.fetchUser()
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
   },
 }
 </script>
