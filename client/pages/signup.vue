@@ -109,7 +109,7 @@
 
 <script>
 export default {
-  layout: 'navbar-only',
+  layout: 'none',
 
   data() {
     return {
