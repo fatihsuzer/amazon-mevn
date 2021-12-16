@@ -28,6 +28,7 @@
                       auth-required-field
                       auth-contact-verification-request-info
                     "
+                    v-model="name"
                   />
                 </div>
                 <!-- email -->
@@ -45,6 +46,7 @@
                       auth-required-field
                       auth-contact-verification-request-info
                     "
+                    v-model="email"
                   />
                 </div>
                 <!-- Password -->
@@ -62,21 +64,26 @@
                       auth-required-field
                       auth-contact-verification-request-info
                     "
+                    v-model="password"
                   />
-                <div class="a-alert-container">
-                  <div class="a-alert-content">Password must be at least 6 characters</div>
-                </div>
+                  <div class="a-alert-container">
+                    <div class="a-alert-content">
+                      Password must be at least 6 characters
+                    </div>
+                  </div>
                 </div>
                 <!-- Button -->
                 <div class="a-row a-spacing-extra-large mb-4">
                   <span class="a-button-primary">
                     <span class="a-button-inner">
-                      <span class="a-button-text"> Create your Amazon account</span>
-                    </span> 
+                      <span class="a-button-text" @click="onSignup">
+                        Create your Amazon account</span
+                      >
+                    </span>
                   </span>
                   <div class="a-row a-spacing-top-medium a-size-small">
                     <b>
-                      By creating account, you agree to Amazon's 
+                      By creating account, you agree to Amazon's
                       <a href="#">Conditions of Use</a> and
                       <a href="#">Privacy Notice</a>
                     </b>
@@ -86,7 +93,9 @@
                 <div class="a-row">
                   <b>
                     Already have an account?
-                    <nuxt-link to="/login" class="a-link-emphasis">Sign in</nuxt-link>
+                    <nuxt-link to="/login" class="a-link-emphasis"
+                      >Sign in</nuxt-link
+                    >
                   </b>
                 </div>
               </div>
@@ -100,7 +109,42 @@
 
 <script>
 export default {
-  layout: "navbar-only",
+  layout: 'navbar-only',
+
+  data() {
+    return {
+      name: '',
+      email: '',
+      password: '',
+    }
+  },
+
+  methods: {
+    async onSignup() {
+      try {
+        let data = {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        }
+
+        let response = await this.$axios.$post('/api/auth/signup', data)
+
+        if (response.success) {
+          await this.$auth.loginWith('local', {
+            data: {
+              email: this.email,
+              password: this.password,
+            },
+          })
+
+          this.$router.push('/')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  },
 }
 </script>
 
