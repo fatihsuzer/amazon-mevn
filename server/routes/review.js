@@ -23,7 +23,7 @@ router.post(
 
       if (savedReview) {
         res.json({
-          status: true,
+          success: true,
           message: "Succesfully added Review",
         });
       }
