@@ -6,7 +6,7 @@
         <!-- Logo -->
         <div class="col-sm-2">
           <div class="logo-area">
-            <nuxt-link to="#">
+            <nuxt-link to="/">
               <img src="/img/logo.png" alt="logo" class="img-fluid" />
             </nuxt-link>
           </div>

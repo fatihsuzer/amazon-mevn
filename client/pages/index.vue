@@ -10,7 +10,11 @@
           <FeaturedProduct />
           <div class="mainResults">
             <ul class="s-result-list">
-              <li class="s-result-item celwidget" v-for="product in products" :key="product._id">
+              <li
+                class="s-result-item celwidget"
+                v-for="product in products"
+                :key="product._id"
+              >
                 <div class="s-item-container">
                   <!-- Best seller -->
                   <div class="a-spacing-micro">
@@ -33,7 +37,7 @@
                       <div class="col-sm-9">
                         <div class="a-row a-spacing-small">
                           <!-- Title and Date -->
-                          <a href="#" class="a-link-normal">
+                          <nuxt-link :to="`/products/${product._id}`" class="a-link-normal">
                             <h2 class="a-size-medium">
                               {{ product.title }}
                               <span class="a-letter-space"></span>
@@ -42,7 +46,7 @@
                                 Dec, 5 2021</span
                               >
                             </h2>
-                          </a>
+                          </nuxt-link>
                         </div>
                         <!-- Author name -->
                         <div class="a-row a-spacing-small">
@@ -64,11 +68,15 @@
                             <!-- price -->
                             <div class="a-row a-spacing-none">
                               <a href="#" class="a-link-normal a-text-normal">
-                                <span class="a-offscreen"> ${{ product.price }}</span>
+                                <span class="a-offscreen">
+                                  ${{ product.price }}</span
+                                >
                                 <span class="a-color-base sx-zero-spacing">
                                   <span class="sx-price sx-price-large">
                                     <sup class="sx-price-currency">$</sup>
-                                    <span class="sx-price-whole"> {{ product.price }}</span>
+                                    <span class="sx-price-whole">
+                                      {{ product.price }}</span
+                                    >
                                     <sup class="sx-price-fractional">00</sup>
                                   </span>
                                 </span>
@@ -101,13 +109,30 @@
                               >
                             </span>
                           </div>
-                        </div>
-                        <!-- Rating -->
+                                                  <!-- Rating -->
                         <div class="col-sm-5">
                           <div class="a-row a-spacing-mini">
                             <!-- Star Rating -->
+                            <client-only>
+                              <star-rating
+                                :rating="product.averageRating"
+                                :show-rating="false"
+                                :glow="1"
+                                :border-width="1"
+                                :rounded-corners="true"
+                                :read-only="true"
+                                :star-size="18"
+                                :star-points="[
+                                  23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43,
+                                  38, 50, 36, 34, 46, 19, 31, 17,
+                                ]"
+                              >
+                              </star-rating>
+                            </client-only>
                           </div>
                         </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -126,16 +151,21 @@ import FeaturedProduct from '~/components/FeaturedProduct.vue'
 export default {
   components: {
     FeaturedProduct,
+    StarRating: () => {
+      if (process.client) {
+        return import('vue-star-rating')
+      }
+    },
   },
   async asyncData({ $axios }) {
     try {
-      let response = await $axios.$get('/api/products');
-      
+      let response = await $axios.$get('/api/products')
+
       return {
-        products: response.products
+        products: response.products,
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   },
 }
