@@ -96,7 +96,24 @@
                 </a>
                 (Author)
               </div>
-              <div class="reviewGroup"></div>
+              <div class="reviewGroup">
+                <client-only>
+                  <star-rating
+                    :rating="product.averageRating"
+                    :show-rating="false"
+                    :glow="1"
+                    :border-width="1"
+                    :rounded-corners="true"
+                    :read-only="true"
+                    :star-size="18"
+                    :star-points="[
+                      23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43, 38, 50, 36,
+                      34, 46, 19, 31, 17,
+                    ]"
+                  >
+                  </star-rating>
+                </client-only>
+              </div>
               <hr style="margin-top: 10px" />
               <!-- A tags dumy data -->
               <div class="mediaMatrix">
@@ -371,18 +388,36 @@
             </div>
           </div>
         </div>
+        <Review-section :product="product" :reviews="reviews" />
       </div>
     </div>
   </main>
 </template>
 
 <script>
+import ReviewSection from '~/components/ReviewSection'
 export default {
+  components: {
+    ReviewSection,
+    StarRating: () => {
+      if (process.client) {
+        return import('vue-star-rating')
+      }
+    },
+  },
   async asyncData({ $axios, params }) {
     try {
-      let response = await $axios.$get(`/api/products/${params.id}`)
+      let singleProduct = $axios.$get(`/api/products/${params.id}`)
+      let manyReviews = $axios.$get(`/api/reviews/${params.id}`)
+
+      const [productResponse, reviewsResponse] = await Promise.all([
+        singleProduct,
+        manyReviews,
+      ])
+
       return {
-        product: response.product,
+        product: productResponse.product,
+        reviews: reviewsResponse.reviews,
       }
     } catch (error) {
       console.log(product)
