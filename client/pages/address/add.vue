@@ -50,7 +50,7 @@
                   <div class="a-spacing-top-medium">
                     <label style="margin-bottom: 0px">Country/Region</label>
                     <select class="a-select-option" v-model="country">
-                      <option value>--</option>
+                      <option v-for="country in countries" :key="country.cca2" :value="country.name.common">{{ country.name.common }}</option>
                       <option></option>
                     </select>
                   </div>
@@ -72,7 +72,7 @@
                       class="a-input-text"
                       style="width: 100%"
                       placeholder="Street and number, P.O. box, c/o."
-                      v-model="streetAdress1"
+                      v-model="streetAddress1"
                     />
                     <!-- Street Address 2 -->
                     <input
@@ -80,7 +80,7 @@
                       class="a-input-text a-spacing-top-small"
                       style="width: 100%"
                       placeholder="Apartment, suite, unit, building, floor, etc."
-                      v-model="streetAdress2"
+                      v-model="streetAddress2"
                     />
                   </div>
                   <!-- City -->
@@ -191,7 +191,7 @@
                   <div class="a-spacing-top-large">
                     <span class="a-button-register">
                       <span class="a-button-inner">
-                        <span class="a-button-text">Add address</span>
+                        <span class="a-button-text" @click="onAddAddress">Add address</span>
                       </span>
                     </span>
                   </div>
@@ -210,12 +210,22 @@
 
 <script>
 export default {
+  async asyncData({ $axios }) {try {
+    let response = await $axios.$get('api/countries');
+
+    return {
+      countries: response
+    }
+  } catch (error) {
+    console.log(error)
+  }},
+
   data() {
     return {
-      country: "",
+      country: "Turkey",
       fullName: "",
       streetAddress1: "",
-      streetAdress2: "",
+      streetAddress2: "",
       city: "",
       state: "",
       zipCode: "",
@@ -231,8 +241,7 @@ export default {
         let data = {
           country: this.country,
           fullName: this.fullName,
-          streetAddress1: this.streetAddress1,
-          streetAddress2: this.streetAdress2,
+          streetAddress: this.streetAddress1 + " " + this.streetAddress2,
           city: this.city,
           state: this.state,
           zipCode: this.zipCode,

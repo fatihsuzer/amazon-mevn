@@ -14,4 +14,4 @@ const AddressSchema = new Schema({
   securityCode: String,
 });
 
-module.exports = mongoose.model("AddressSchema", AddressSchema);
+module.exports = mongoose.model("Address", AddressSchema);
