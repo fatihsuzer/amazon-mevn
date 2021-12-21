@@ -18,7 +18,7 @@
                   <li class="a-breadcrumb-divider">›</li>
                   <li class="active">
                     <a href="#">
-                      <span>Your Adresses</span>
+                      <span>Your Addresses</span>
                     </a>
                   </li>
                 </ul>
@@ -80,10 +80,11 @@
                           </div>
                         </div>
                       </div>
-                      <!-- Delete Button -->
+                      <!-- Edit Button -->
                       <div class="edit-address-desktop-link">
-                        <a href="#">Edit</a>
+                        <nuxt-link :to="`/address/${address._id}`">Edit</nuxt-link>
                         &nbsp; | &nbsp;
+                      <!-- Delete Button -->
                         <a href="#" @click="onDeleteAddress(address._id, index)"
                           >Delete</a
                         >
@@ -156,7 +157,7 @@ export default {
     async onSetDefault(id) {
       try {
         let response = await this.$axios.$put('/api/addresses/set/default', {
-          $id: id,
+          id: id,
         })
         if (response.success) {
           this.message = response.message

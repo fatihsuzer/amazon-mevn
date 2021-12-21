@@ -33,7 +33,7 @@ router.post("/addresses", verifyToken, async (req, res) => {
     await address.save();
     res.json({
       success: true,
-      message: "Successfully added an adress",
+      message: "Successfully added an address",
     });
   } catch (err) {
     res.status(500).json({
@@ -56,6 +56,22 @@ router.get("/addresses", verifyToken, async (req, res) => {
     res.status(500).json({
       status: false,
       message: err.message,
+    });
+  }
+});
+//GET - Get single address
+router.get("/addresses/:id", verifyToken, async (req, res) => {
+  try {
+    let address = await Address.findOne({ _id: req.params.id });
+
+    res.json({
+      success: true,
+      address: address,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 });
@@ -96,7 +112,7 @@ router.put("/addresses/:id", verifyToken, async (req, res) => {
 
       if (country) foundAddress.country = country;
       if (fullName) foundAddress.fullName = fullName;
-      if (streetAdress) foundAddress.streetAddress = streetAddress;
+      if (streetAddress) foundAddress.streetAddress = streetAddress;
       if (city) foundAddress.city = city;
       if (state) foundAddress.state = state;
       if (zipCode) foundAddress.zipCode = zipCode;
@@ -115,7 +131,7 @@ router.put("/addresses/:id", verifyToken, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: err.message,
+      message: error.message,
     });
   }
 });
@@ -148,6 +164,7 @@ router.put("/addresses/set/default", verifyToken, async (req, res) => {
       { _id: req.decoded._id },
       { $set: { address: req.body.id } }
     );
+    console.log(updatedAddress);
     if (updatedAddress) {
       res.json({
         success: true,
