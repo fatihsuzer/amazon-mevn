@@ -83,15 +83,26 @@
                             </label>
                           </div>
                           <div class="sc-action-links">
-                            <select>
-                              <option>Qty: &nbsp;1</option>
+                            <select @change="onChangeQuantity($event, product)">
+                              <option
+                                v-for="i in 10"
+                                :key="i"
+                                :value="i"
+                                :selected="checkQty(product.quantity, i)"
+                              >
+                                Qty: &nbsp; {{ i }}
+                              </option>
                             </select>
                             &nbsp;&nbsp;
                             <span>|</span>
                             &nbsp;
                             <!-- Delete button -->
                             <span class="a-size-small">
-                              <a href="#">Delete</a>
+                              <a
+                                href="#"
+                                @click="$store.commit('removeProduct', product)"
+                                >Delete</a
+                              >
                             </span>
                             &nbsp; &nbsp;
                           </div>
@@ -121,10 +132,14 @@
                 <div class="text-right">
                   <!-- Cart Subtotal -->
                   <p class="a-spacing-none a-spacing-top-mini">
-                    <span class="a-size-medium">Subtotal {{getCartLength}}</span>
+                    <span class="a-size-medium"
+                      >Subtotal ({{ getCartLength }} item)</span
+                    >
                     <span class="a-color-price a-text-bold">
                       <!-- Cart Total Price -->
-                      <span class="a-size-medium a-color-price">{{getCartTotalPrice}}</span>
+                      <span class="a-size-medium a-color-price">{{
+                        getCartTotalPrice
+                      }}</span>
                     </span>
                   </p>
                 </div>
@@ -139,10 +154,12 @@
                     <p class="a-spacing-none a-spacing-top-none">
                       <!-- Cart Subtotal -->
                       <span class="a-size-medium">
-                        <span>Subtotal {{getCartLength}}:</span>
+                        <span>Subtotal ({{ getCartLength }} item)</span>
                         <span class="a-color-price a-text-bold">
                           <!-- Cart Total Price  -->
-                          <span class="a-size-medium a-color-price">{{getCartTotalPrice}}</span>
+                          <span class="a-size-medium a-color-price">{{
+                            getCartTotalPrice
+                          }}</span>
                         </span>
                       </span>
                     </p>
@@ -246,6 +263,19 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters(['getCart', 'getCartTotalPrice', 'getCartLength']),
+  },
+  methods: {
+    onChangeQuantity(event, product) {
+      let qty = parseInt(event.target.value)
+      this.$store.commit('changeQty', { product, qty })
+    },
+    checkQty(prodQty, qty) {
+      if (parseInt(prodQty) === parseInt(qty)) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 }
 </script>
